@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import List
 import os
 import uuid
+from pydantic import BaseModel
 from dotenv import load_dotenv
 import asyncio
 
@@ -28,6 +29,7 @@ from api import schemas
 from managers.instagram_manager import InstagramManager
 from managers.scheduler import video_scheduler
 from managers.ai_generator import ai_generator
+from managers.agent_core import agent_core
 from utils.background_tasks import (
     process_interval_schedule,
     process_dated_schedule,
@@ -54,6 +56,39 @@ ig_manager = InstagramManager()
 STORAGE_DIR = Path("storage/files")
 STORAGE_DIR.mkdir(parents=True, exist_ok=True)
 
+
+
+class DemoTriggerRequest(BaseModel):
+    trend: str
+
+@app.post("/demo/trigger")
+def trigger_agent_demo(request: DemoTriggerRequest):
+    """
+    Manually triggers the agent to evaluate a specific trend.
+    Injects the trend into AgentCore and it will be picked up in the next tick.
+    """
+    agent_core.inject_trend(request.trend)
+    return {"message": f"Trend '{request.trend}' injected. Agent will evaluate it shortly."}
+
+class AgentFocusRequest(BaseModel):
+    influencer_id: int
+
+@app.post("/api/agent/focus")
+def set_agent_focus(request: AgentFocusRequest):
+    """Sets the agent's focus to a specific influencer."""
+    agent_core.set_active_influencer(request.influencer_id)
+    return {"message": f"Agent focus switched to influencer {request.influencer_id}"}
+
+@app.get("/api/agent/status")
+def get_agent_status():
+    """Get the current internal state of the Agent Core"""
+    return {
+        "state": agent_core.state.value,
+        "roi_score": agent_core.last_roi_score,
+        "interests": agent_core.current_persona_interests,
+        "mood": agent_core.current_mood,
+        "recent_logs": agent_core.recent_activity
+    }
 
 # NOTE: The following function is a placeholder for a real AI implementation
 # and would ideally live in the `managers.ai_generator` module.
@@ -670,6 +705,14 @@ async def generate_image(
 
 #     return {"success": True, "username": username, "message": message}
 
+
+@app.on_event("startup")
+async def startup_event():
+    agent_core.start()
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    agent_core.stop()
 
 @app.get("/")
 def root():

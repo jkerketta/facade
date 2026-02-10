@@ -56,11 +56,17 @@ const Step2DefineAudience: React.FC<Step2DefineAudienceProps> = ({
 				);
 
 				if (!response.ok) {
-					const errorData = await response.json();
-					console.error("Failed to fetch suggestions:", errorData);
+					const rawBody = await response.text();
+					console.error("API Error Response:", rawBody);
+					let errorData;
+					try {
+						errorData = JSON.parse(rawBody);
+					} catch {
+						errorData = { error: `Server returned non-JSON error: ${rawBody.slice(0, 100)}...` };
+					}
+
 					alert(
-						`Error: ${
-							errorData.error || "Could not generate suggestions."
+						`Error: ${errorData.error || "Could not generate suggestions."
 						}`
 					);
 					return;

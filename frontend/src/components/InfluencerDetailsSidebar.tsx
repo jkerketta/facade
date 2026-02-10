@@ -1,6 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import ScheduleCalendar from "./shared/ScheduleCalendar";
+import LiveAgentPanel from "./LiveAgentPanel";
 
 interface Influencer {
 	id: number;
@@ -61,10 +62,10 @@ const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => (
 const generateRandomStats = () => {
 	// Generate followers between 1.2K and 9.8K
 	const followers = (Math.random() * 8.6 + 1.2).toFixed(1) + "K";
-	
+
 	// Generate engagement between 2.5% and 12.5%
 	const engagement = (Math.random() * 10 + 2.5).toFixed(1) + "%";
-	
+
 	return { followers, engagement };
 };
 
@@ -72,36 +73,36 @@ const generateRandomStats = () => {
 const generateMockSchedule = () => {
 	const today = new Date();
 	const schedule: Record<string, any[]> = {};
-	
+
 	// Generate schedule for the next 7 days
 	for (let i = 0; i < 7; i++) {
 		const date = new Date(today);
 		date.setDate(today.getDate() + i);
 		const dateStr = date.toISOString().split("T")[0];
-		
+
 		// Random number of posts per day (1-3)
 		const numPosts = Math.floor(Math.random() * 3) + 1;
-		
+
 		schedule[dateStr] = [];
-		
+
 		for (let j = 0; j < numPosts; j++) {
 			const hour = Math.floor(Math.random() * 12) + 8; // 8 AM to 8 PM
 			const minute = Math.random() > 0.5 ? 30 : 0;
 			const type = Math.random() > 0.5 ? "reel" : "story";
-			
+
 			schedule[dateStr].push({
 				type,
 				time: `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`,
-				description: type === "reel" 
+				description: type === "reel"
 					? "Sharing browser tips and tricks"
 					: "Daily browser security update"
 			});
 		}
-		
+
 		// Sort by time
 		schedule[dateStr].sort((a, b) => a.time.localeCompare(b.time));
 	}
-	
+
 	return schedule;
 };
 
@@ -112,7 +113,18 @@ const InfluencerDetailsSidebar = ({
 }: Props) => {
 	// Generate random stats on component mount
 	const [stats] = React.useState(generateRandomStats());
-	
+
+	// Set Agent Focus when sidebar opens or influencer changes
+	React.useEffect(() => {
+		if (influencer?.id) {
+			fetch("http://localhost:8000/api/agent/focus", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ influencer_id: influencer.id }),
+			}).catch(err => console.error("Failed to set agent focus:", err));
+		}
+	}, [influencer?.id]);
+
 	// Create schedule from videos data, following the same pattern as page.tsx
 	const scheduleByDay = React.useMemo(() => {
 		// If there are videos, use them
@@ -230,6 +242,11 @@ const InfluencerDetailsSidebar = ({
 							<li key={index}>{goal}</li>
 						))}
 					</ul>
+				</div>
+
+				{/* Live Agent Panel */}
+				<div className="mt-8">
+					<LiveAgentPanel />
 				</div>
 
 				{/* Schedule Calendar */}

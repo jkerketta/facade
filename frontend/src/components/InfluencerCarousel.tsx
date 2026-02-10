@@ -57,15 +57,6 @@ const InfluencerCarousel = ({
 	const velocityRef = useRef(0);
 
 	const totalCards = influencers.length;
-	if (totalCards === 0) {
-		return (
-			<div className={`relative w-full h-full ${className}`}>
-				<div className='relative w-full h-full flex items-center justify-center text-white/50'>
-					No influencers yet.
-				</div>
-			</div>
-		);
-	}
 	const angleStep = 360 / totalCards;
 	const radius = 150 + totalCards * 40; // Increased radius for more spacing
 
@@ -178,6 +169,16 @@ const InfluencerCarousel = ({
 		};
 	}, [handleDragging, handleDragEnd]);
 
+	if (totalCards === 0) {
+		return (
+			<div className={`relative w-full h-full ${className}`}>
+				<div className='relative w-full h-full flex items-center justify-center text-white/50'>
+					No influencers yet.
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className={`relative w-full h-full ${className}`}>
 			<div
@@ -185,11 +186,10 @@ const InfluencerCarousel = ({
 				style={{ perspective: "2000px", transform: "scale(0.85)" }}
 			>
 				<div
-					className={`relative w-[300px] h-[450px] ${
-						isDragging
-							? "transition-none"
-							: "transition-transform duration-500 ease-out"
-					}`}
+					className={`relative w-[300px] h-[450px] ${isDragging
+						? "transition-none"
+						: "transition-transform duration-500 ease-out"
+						}`}
 					style={{
 						transformStyle: "preserve-3d",
 						transform: `rotateY(${rotation}deg)`,
@@ -213,7 +213,7 @@ const InfluencerCarousel = ({
 						const brightness =
 							maxBrightness -
 							(angleDifference / 180) *
-								(maxBrightness - minBrightness);
+							(maxBrightness - minBrightness);
 
 						return (
 							<div
