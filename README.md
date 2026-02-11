@@ -1,56 +1,117 @@
-<div align="center">
+# façade
 
-# AIFluence
+Build and run AI-native influencer personas with an opinionated control room.
 
-AIFluence is a platform that lets users create autonomous AI influencer personas capable of growing their own social media presence, entirely on autopilot.
-Won 11k @ SpurHacks.
+`façade` is a full-stack system for creating virtual creators, planning content, reshaping character arcs, and managing sponsor relationships from one dashboard.
 
-</div>
+## Why This Feels Different
 
-<img width="1461" height="738" alt="Screenshot 2025-09-21 at 9 27 22 PM" src="https://github.com/user-attachments/assets/0b20c643-8fdd-4323-a316-be0a051db355" />
+Most influencer tools optimize for posting.
+`façade` optimizes for narrative continuity.
 
+- Create creators with an identity, tone, audience, and goals.
+- Keep a living life story as a first-class state object.
+- Schedule content with timeline and calendar views.
+- Trigger **Divine Intervention** to rewrite a creator's story, clear future content, and regenerate the plan.
+- Manage sponsor records and attach sponsored context to content workflows.
 
-## What It Does
-Users initialize a virtual influencer by giving it a name, backstory, tone, goals, and preferred audience. From there, the system handles the entire content lifecycle:
+## Current Stack
 
-- It generates reels and stories using multimodal models like **Veo 3** and **Gemini 2.5 Pro**.
-- It schedules posts at your desired time.
-- It directly publishes to **Instagram** via the official **Publishing API**.
-- It builds a real-time digital identity and adapts based on user-defined objectives and "changes" to the persona's life
+- Frontend: Next.js 15 + React 19 + Tailwind CSS
+- Backend: FastAPI + SQLAlchemy + APScheduler
+- Database: SQLite (`backend/storage/accounts.db`)
+- AI: Google Gemini client (`google-genai`)
+- Media/imagery: Pillow-based generation pipeline
 
-AIFluence supports two key use cases:
-- **B2B**: Businesses can build persistent, custom brand ambassadors tailored to their market segment.
-- **B2C**: Individual users or niche entrepreneurs can create lifestyle personas to explore passive-income opportunities—similar to dropshipping, but with content instead of products.
+## Architecture Snapshot
 
+1. `frontend` collects onboarding data and control actions.
+2. API proxy routes (`/api/backend/*`) forward requests to FastAPI.
+3. `backend/app.py` orchestrates influencer CRUD, scheduling, sponsors, and life-story operations.
+4. Background tasks regenerate plans and maintain posting cadence.
+5. Local storage persists records, schedules, and generated assets.
 
-## How We Built It
+## Key Flows In This Branch
 
-**Frontend:**  
-We used **Next.js** with **React** and **Tailwind CSS** to build an interactive onboarding and dashboard experience. The frontend lets users walk through persona creation, view posting history, and trigger or modify post schedules.
+- **Influencer detail upgrade**
+  - Timeline + calendar browsing in a single profile view.
+  - Local fallback handling when backend is unavailable.
 
-**Backend Server:**  
-Our API server was built using **FastAPI**. It handles influencer initialization, scheduling, and communication with third-party services. It uses a local **SQLite** database to persist influencer data, metadata, and scheduling information.
+- **Divine Intervention**
+  - Endpoint: `POST /influencer/{influencer_id}/divine-intervention`
+  - Rewrites life story with intensity (`subtle`, `moderate`, `major`).
+  - Clears future schedules and regenerates upcoming content.
 
-**Video & Media Generation:**  
-The most critical layer of AIFluence is our media generation pipeline, which connects multiple AI models to simulate influencer behavior:
-- **Veo 3 (Runway)**: Used for high-quality, scene-based reel generation.
-- **Gemini 2.5 Pro**: Used for generating photorealistic persona imagery and thumbnails based on persona attributes.
-- **MoviePy** + **PIL**: For assembling final videos with overlayed captions, transitions, and branding.
-- **Transformers (HuggingFace)** and **GPT-4o**: Used to write captions, develop storytelling scripts, and maintain a coherent voice across time.
+- **Sponsor Studio**
+  - UI page for browsing/adding sponsors and searching by name/industry.
+  - Backend endpoints for sponsor create/list/match and video sponsor assignment.
 
-**Instagram Integration:**  
-We used the official **Instagram Graph API** (Publishing) to automate reel and story uploads on behalf of the AI personas. The FastAPI backend handles login sessions, scheduling, and post automation.
+## Repo Layout
 
-## Architecture Overview
+```text
+.
+├── backend
+│   ├── app.py
+│   ├── managers/
+│   ├── api/
+│   ├── database/
+│   └── storage/
+└── frontend
+    └── src/
+```
 
-1. **User onboarding**: User creates an influencer by filling out a brief profile (name, image, tone, goals, etc.)
-2. **Persona is initialized**: Back-end assigns growth logic, generation cadence, and target audience.
-3. **Content pipeline triggers**: Stories and reels are generated using LLMs + Veo 3 based on persona goals and timelines.
-4. **Auto-scheduling**: Content is slotted into a weekly schedule via FastAPI logic.
-5. **Publishing**: Media is uploaded directly to Instagram with appropriate metadata (captions, hashtags, etc.)
-6. **Analytics (MVP)**: The system tracks posting intervals, response rates, and growth curves.
+## Quick Start
 
+### 1. Backend
 
-## Inspiration
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+```
 
-Influencer marketing is booming, but it’s inefficient and expensive. Human influencers come with inconsistent availability, high costs, and limited scalability. We imagined a world where you could "design" an influencer that doesn't sleep, doesn't charge thousands per post, and aligns perfectly with your product or personal vision.
+Set `GEMINI_API_KEY` in `backend/.env`.
+
+Run:
+
+```bash
+python app.py
+```
+
+Backend default: `http://localhost:8000`
+
+### 2. Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev -- --host 127.0.0.1 --port 5174
+```
+
+Frontend default: `http://127.0.0.1:5174`
+
+Optional env:
+
+- `BACKEND_URL=http://127.0.0.1:8000`
+
+## API Highlights
+
+- `POST /sorcerer/init` create influencer from onboarding wizard
+- `GET /influencers` list influencers
+- `GET /influencer/{id}` fetch influencer
+- `GET /influencer/{id}/videos` fetch scheduled content
+- `POST /schedule/interval` plan recurring content
+- `POST /schedule/bulk` create dated content plans
+- `POST /influencer/{id}/divine-intervention` rewrite story + regenerate schedule
+- `POST /sponsors` create sponsor
+- `GET /sponsors` list sponsors
+- `POST /sponsor/match` match sponsor to influencer
+- `POST /video/{id}/add-sponsor` attach sponsor to scheduled content
+
+## Notes
+
+- This repository currently includes a local SQLite DB file under `backend/storage/`.
+- Some generation and publishing behavior is API-key or credentials dependent.
+- If backend is unreachable, parts of the frontend now surface graceful fallback states.
