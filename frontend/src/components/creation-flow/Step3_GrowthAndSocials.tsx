@@ -34,20 +34,20 @@ const Step3GrowthAndSocials: React.FC<Step3GrowthAndSocialsProps> = ({
 		<div className='relative h-screen max-h-screen overflow-x-hidden flex flex-col'>
 			<div className='absolute -top-20 -left-20 w-40 h-40 bg-[#d9ebff]/55 blur-3xl' />
 			<div className='absolute -bottom-20 -right-20 w-60 h-60 bg-[#d9ebff]/55 blur-3xl' />
-			
+
 			<div className='relative z-10 flex-1 flex flex-col p-8'>
 				<div className='mb-8'>
 					<div className='flex items-baseline gap-4 mb-4'>
 						<div className='w-20 h-px bg-black/30' />
 						<span className='text-black/30 text-xs tracking-[0.3em] uppercase'>Configure</span>
 					</div>
-					
+
 					<h1 className='text-5xl font-black tracking-tighter leading-none mb-2'>
 						<span className='text-black/90'>CONFIGURE</span>
 						<br />
 						<span className='text-black/60'>GROWTH & ACCOUNTS</span>
 					</h1>
-					
+
 					<div className='flex items-center gap-6 mt-4'>
 						<div className='flex-1 h-px bg-black/15' />
 						<p className='text-black/40 text-xs uppercase tracking-wider'>
@@ -80,18 +80,16 @@ const Step3GrowthAndSocials: React.FC<Step3GrowthAndSocialsProps> = ({
 										onClick={() =>
 											setGrowthPhaseEnabled(!growth_phase_enabled)
 										}
-										className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-											growth_phase_enabled
+										className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${growth_phase_enabled
 												? "bg-teal-500"
 												: "bg-black/20"
-										}`}
+											}`}
 									>
 										<span
-											className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-												growth_phase_enabled
+											className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${growth_phase_enabled
 													? "translate-x-5"
 													: "translate-x-0"
-											}`}
+												}`}
 										/>
 									</button>
 								</div>
@@ -137,7 +135,7 @@ const Step3GrowthAndSocials: React.FC<Step3GrowthAndSocialsProps> = ({
 										htmlFor='instagram_username'
 										className='block text-sm font-medium text-black/70 mb-2'
 									>
-										Instagram Username
+										TikTok Username
 									</label>
 									<input
 										type='text'
@@ -147,7 +145,7 @@ const Step3GrowthAndSocials: React.FC<Step3GrowthAndSocialsProps> = ({
 											setInstagramUsername(e.target.value)
 										}
 										className='w-full px-4 py-2 bg-white/5 border border-black/10 rounded-lg placeholder-black/40 text-black focus:outline-none focus:ring-2 focus:ring-black/20'
-										placeholder='username'
+										placeholder='@username'
 										autoComplete="off"
 									/>
 								</div>
@@ -156,7 +154,7 @@ const Step3GrowthAndSocials: React.FC<Step3GrowthAndSocialsProps> = ({
 										htmlFor='instagram_password'
 										className='block text-sm font-medium text-black/70 mb-2'
 									>
-										Instagram Password
+										TikTok Password
 									</label>
 									<div className='relative'>
 										<input
@@ -190,7 +188,7 @@ const Step3GrowthAndSocials: React.FC<Step3GrowthAndSocialsProps> = ({
 
 				<div className='mt-auto'>
 					<div className='h-px bg-black/15 mb-6' />
-					
+
 					<div className='flex items-center justify-between'>
 						<button
 							onClick={onBack}
@@ -201,7 +199,7 @@ const Step3GrowthAndSocials: React.FC<Step3GrowthAndSocialsProps> = ({
 								<span className='font-semibold uppercase tracking-wider text-sm'>Back</span>
 							</span>
 						</button>
-						
+
 						<button
 							onClick={handleSubmit}
 							className='group flex items-center gap-3 relative overflow-hidden'

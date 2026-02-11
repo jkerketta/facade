@@ -67,13 +67,50 @@ const buildMaddieFitnessVideos = (): Video[] => {
 	for (let i = 0; i < 7; i++) {
 		const day = new Date(today);
 		day.setDate(today.getDate() + i);
+		const baseId = i * 10;
+
+		// For EXACTLY "today" (i === 0), we want exactly 2 REELS.
+		if (i === 0) {
+			// Reel 1: Morning
+			const reel1Time = new Date(day);
+			reel1Time.setHours(9, 0, 0, 0); // 9 AM
+			videos.push({
+				video_id: baseId + 1,
+				schedule_id: baseId + 1,
+				scheduled_time: reel1Time.toISOString(),
+				content_type: "reel",
+				status: "scheduled",
+				caption: "Kickstarting the day! 🏃‍♀️✨ #MorningGrind",
+				hashtags: ["fitness", "morningroutine", "gymlife"],
+				is_active: true,
+				has_sponsor: false,
+			});
+
+			// Reel 2: Evening
+			const reel2Time = new Date(day);
+			reel2Time.setHours(18, 0, 0, 0); // 6 PM
+			videos.push({
+				video_id: baseId + 3, // Keep ID distinct
+				schedule_id: baseId + 3,
+				scheduled_time: reel2Time.toISOString(),
+				content_type: "reel",
+				status: "scheduled",
+				caption: "Wrapping up the daily goals. 💪 #NoExcuses",
+				hashtags: ["workout", "transformation", "goals"],
+				is_active: true,
+				has_sponsor: false,
+			});
+			continue;
+		}
+
+		// Other days: Keep original pattern (Reel -> Story -> Reel)
 		const morning = new Date(day);
 		morning.setHours(7, 0, 0, 0);
 		const lunch = new Date(day);
 		lunch.setHours(12, 30, 0, 0);
 		const evening = new Date(day);
 		evening.setHours(18, 0, 0, 0);
-		const baseId = i * 10;
+
 		videos.push(
 			{
 				video_id: baseId + 1,
@@ -339,8 +376,7 @@ const InfluencerProfilePage = () => {
 			} else {
 				const error = await response.json();
 				alert(
-					`Failed to schedule post: ${
-						error.detail || "Unknown error"
+					`Failed to schedule post: ${error.detail || "Unknown error"
 					}`
 				);
 			}
@@ -563,21 +599,19 @@ const InfluencerProfilePage = () => {
 								<div className='flex items-center border border-black/20'>
 									<button
 										onClick={() => setViewMode("timeline")}
-										className={`px-3 py-1 text-xs uppercase transition-colors duration-200 ease-in-out ${
-											viewMode === "timeline"
+										className={`px-3 py-1 text-xs uppercase transition-colors duration-200 ease-in-out ${viewMode === "timeline"
 												? "bg-white text-black"
 												: "bg-transparent text-black/50 hover:bg-black/5"
-										}`}
+											}`}
 									>
 										Timeline
 									</button>
 									<button
 										onClick={() => setViewMode("calendar")}
-										className={`px-3 py-1 text-xs uppercase transition-colors duration-200 ease-in-out ${
-											viewMode === "calendar"
+										className={`px-3 py-1 text-xs uppercase transition-colors duration-200 ease-in-out ${viewMode === "calendar"
 												? "bg-white text-black"
 												: "bg-transparent text-black/50 hover:bg-black/5"
-										}`}
+											}`}
 									>
 										Calendar
 									</button>

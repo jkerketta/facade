@@ -198,6 +198,18 @@ def plan_and_schedule_from_life_story(influencer_id: int, days_to_plan: int):
         
         combined_plan = sorted(reel_plan + story_plan, key=lambda x: x['day'])
         
+        # --- FORCE 2 REELS FOR TODAY (Day 1) ---
+        # Remove any existing Day 1 content to ensure clean slate for 'today'
+        combined_plan = [item for item in combined_plan if item.get('day') != 1]
+        
+        today_reels = [
+            {"day": 1, "post_context": "Morning Routine: Wake up, coffee, and getting ready for the day.", "content_type": "reel"},
+            {"day": 1, "post_context": "Evening Reflection: Highlights of the day and winding down.", "content_type": "reel"}
+        ]
+        # Prepend them
+        combined_plan = today_reels + combined_plan
+        # ---------------------------------------
+
         print("--- Generated Content Plan ---")
         print(json.dumps(combined_plan, indent=2))
         print("--------------------------")
@@ -213,12 +225,24 @@ def plan_and_schedule_from_life_story(influencer_id: int, days_to_plan: int):
             try:
                 day_offset = item.get("day", 1) - 1
                 post_date = today + timedelta(days=day_offset)
-                random_hour = random.randint(9, 21) # Post between 9 AM and 9 PM
-                random_minute = random.randint(0, 59)
-                scheduled_time = post_date.replace(hour=random_hour, minute=random_minute, second=0, microsecond=0)
+                
+                # If it's one of our forced Day 1 reels, set specific times
+                if item.get("day") == 1:
+                    if "Morning" in item.get("post_context", ""):
+                         scheduled_time = post_date.replace(hour=9, minute=0, second=0, microsecond=0)
+                    else:
+                         scheduled_time = post_date.replace(hour=18, minute=0, second=0, microsecond=0)
+                else:
+                    random_hour = random.randint(9, 21) # Post between 9 AM and 9 PM
+                    random_minute = random.randint(0, 59)
+                    scheduled_time = post_date.replace(hour=random_hour, minute=random_minute, second=0, microsecond=0)
 
-                if scheduled_time < datetime.now():
-                    continue
+                if scheduled_time < datetime.now() and item.get("day") != 1: 
+                    # Skip past events unless it's our forced Day 1 stuff which might be slightly in past if testing late
+                    # But if strict, we allow it to be scheduled for today even if time passed, or push it.
+                    # For demo, let's allow it but maybe push to next hour if passed?
+                    # actually, let's just let it be scheduled.
+                    pass 
 
                 prompt_data = ai_generator.generate_scene_prompt(
                     influencer,

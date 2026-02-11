@@ -89,7 +89,7 @@ const AddPostModal: React.FC<AddPostModalProps> = ({
 					intention:
 						"Create a post that is engaging and informative.",
 				},
-				platform: "instagram",
+				platform: "tiktok",
 			},
 		};
 

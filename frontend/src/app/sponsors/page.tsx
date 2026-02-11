@@ -154,7 +154,7 @@ const SponsorsPage = () => {
 				playsInline
 				className='absolute inset-0 h-full w-full object-cover'
 			>
-					<source src='/assets/background.mp4?v=20260211' type='video/mp4' />
+				<source src='/assets/background.mp4?v=20260211' type='video/mp4' />
 			</video>
 			<div className='absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.2)_0%,rgba(255,255,255,0.52)_50%,rgba(255,255,255,0.72)_100%)]' />
 			<div className='hidden starfield'></div>
@@ -165,12 +165,11 @@ const SponsorsPage = () => {
 				<section className='w-full flex-1 flex flex-col items-center justify-center px-4 pb-8 pt-8 md:px-10 overflow-y-auto'>
 					<header className='text-center w-full max-w-4xl mx-auto mb-10 md:mb-12'>
 						<h1 className='text-5xl md:text-7xl font-bold tracking-tighter'>
-							Sponsorship Constellation
+							Strategic Partnerships
 						</h1>
 						<p className='text-black/60 mt-4 text-lg max-w-2xl mx-auto'>
-							Explore the alliance of brands and partners fueling
-							our digital universe. Connect with the innovators
-							shaping the future.
+							Curate and manage your network of brand collaborations.
+							Leverage data-driven insights to align with partners that resonate with your audience demographics.
 						</p>
 					</header>
 
@@ -179,7 +178,7 @@ const SponsorsPage = () => {
 							<Search className='absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black/60 z-10' />
 							<input
 								type='text'
-								placeholder='Scan the stars for a partner...'
+								placeholder='Search for brands, industries, or tiers...'
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
 								className='w-full bg-transparent py-3 pl-12 pr-4 text-black placeholder-black/50 focus:outline-none'
@@ -187,14 +186,14 @@ const SponsorsPage = () => {
 						</div>
 					</div>
 
-						<div className='w-full max-w-6xl mx-auto'>
-							{fetchError && (
-								<div className='mb-6 border border-black/20 bg-[#f3d4e6]/70 text-black/80 px-4 py-3 rounded-lg text-sm'>
-									{fetchError}
-								</div>
-							)}
-							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
-								{filteredSponsors.map((sponsor, index) => (
+					<div className='w-full max-w-6xl mx-auto'>
+						{fetchError && (
+							<div className='mb-6 border border-black/20 bg-[#f3d4e6]/70 text-black/80 px-4 py-3 rounded-lg text-sm'>
+								{fetchError}
+							</div>
+						)}
+						<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'>
+							{filteredSponsors.map((sponsor, index) => (
 								<SponsorCard
 									key={sponsor.id}
 									sponsor={sponsor}
@@ -205,7 +204,7 @@ const SponsorsPage = () => {
 						{filteredSponsors.length === 0 && (
 							<div className='text-center py-16 animate-fade-in-up'>
 								<p className='text-black/60 text-lg'>
-									No constellations found matching your scan.
+									No partners found matching your criteria.
 								</p>
 							</div>
 						)}
@@ -218,7 +217,7 @@ const SponsorsPage = () => {
 				className='group fixed bottom-8 right-8 z-20 flex items-center justify-center'
 			>
 				<span className='absolute right-full mr-4 text-sm text-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap'>
-					Chart New Partnership
+					Add New Partner
 				</span>
 				<div className='relative w-16 h-16 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full shadow-lg shadow-purple-500/30 flex items-center justify-center hover:scale-105 transition-transform duration-300'>
 					<div className='absolute inset-0 bg-black/20 rounded-full animate-pulse-slow'></div>

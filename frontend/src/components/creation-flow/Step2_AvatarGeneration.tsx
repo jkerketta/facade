@@ -10,7 +10,7 @@ interface Step2AvatarGenerationProps {
 /**
  * Generates a descriptive prompt for an image generation model.
  */
-function generateInstagramInfluencerPrompt({
+function generateTikTokInfluencerPrompt({
 	mode,
 	name,
 	physicalDescription,
@@ -25,7 +25,7 @@ function generateInstagramInfluencerPrompt({
 	const goalsStr = goals?.join(", ") || "build a community";
 	const interestsStr = audienceInterests?.join(", ") || "popular culture";
 
-	return `Generate a realistic, high-quality Instagram influencer portrait of a ${mode || "lifestyle"
+	return `Generate a realistic, high-quality TikTok influencer portrait of a ${mode || "lifestyle"
 		} creator named ${name}.
 They are described as: ${physicalDescription}.
 Context/Background: ${backgroundInfo}.
@@ -58,7 +58,7 @@ const Step2AvatarGeneration: React.FC<Step2AvatarGenerationProps> = ({
 			// Construct prompt
 			let prompt = physicalDescription;
 			if (!prompt || prompt.trim() === "") {
-				prompt = generateInstagramInfluencerPrompt(formData);
+				prompt = generateTikTokInfluencerPrompt(formData);
 			}
 
 			// Call API

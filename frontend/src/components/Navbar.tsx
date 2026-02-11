@@ -55,7 +55,13 @@ const PlusIcon = (props: React.SVGProps<SVGSVGElement>) => (
 	</svg>
 );
 
-const Navbar = ({ onAddClick }: { onAddClick: () => void }) => {
+const Navbar = ({
+	onAddClick,
+	showAddButton = true,
+}: {
+	onAddClick?: () => void;
+	showAddButton?: boolean;
+}) => {
 	return (
 		<nav className='w-full border-b border-black/15 bg-white/95 backdrop-blur-sm px-4 md:px-6 py-4 grid grid-cols-[1fr_auto_1fr] items-center z-20'>
 			<div className='flex items-center gap-2 md:gap-3 min-w-0'>
@@ -76,13 +82,17 @@ const Navbar = ({ onAddClick }: { onAddClick: () => void }) => {
 				</Link>
 			</div>
 			<div className='justify-self-end'>
-				<button
-					onClick={onAddClick}
-					className='h-10 px-4 flex items-center gap-2 justify-center bg-black text-white rounded-full hover:opacity-90 transition-all whitespace-nowrap'
-				>
-					<PlusIcon className='w-4 h-4' />
-					<span className='text-sm font-semibold'>new facade</span>
-				</button>
+				{showAddButton && (
+					<button
+						onClick={onAddClick}
+						className='h-10 px-4 flex items-center gap-2 justify-center bg-black text-white rounded-full hover:opacity-90 transition-all whitespace-nowrap'
+					>
+						<PlusIcon className='w-4 h-4' />
+						<span className='text-sm font-semibold'>
+							new facade
+						</span>
+					</button>
+				)}
 			</div>
 		</nav>
 	);
