@@ -1,0 +1,10 @@
+.DS_Store
+
+# Secrets / environment files
+.env
+.env.*
+*.env
+*.env.*
+
+# Keep templates safe to commit
+!.env.example

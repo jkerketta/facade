@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+:root {
+	--retro-ink: #131313;
+	--retro-paper: #ffffff;
+	--retro-cloud: #d9ebff;
+	--retro-accent: #f0e7a9;
+	--retro-tag: #f3d4e6;
+	--retro-line: #222222;
+}
+
+html,
+body {
+	background: var(--retro-paper);
+	color: var(--retro-ink);
+	font-family: "Avenir Next", "Trebuchet MS", "Gill Sans", "Century Gothic",
+		sans-serif;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+	display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none; /* Firefox */
+	/* overflow-x: hidden; */
+}
